@@ -1,7 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:shake/shake.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() => runApp(MyApp());
+// import 'package:shake/shake.dart';
+// import 'package:shake_shuffle_example/screens/home_page.dart';
+import 'package:shake_shuffle_example/screens/login_page.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(MyApp());
+}
+
+// SHA1: B0:3A:5C:81:02:2A:86:EC:61:EB:A8:BC:40:A5:0A:19:F9:AB:C9:07
+//          SHA256: 05:C2:67:FE:D9:11:95:E1:2C:0B:09:C1:BF:19:BC:2D:0A:61:8C:E7:67:AD:C5:0B:5D:96:C7:42:35:EB:1D:34
 
 class MyApp extends StatelessWidget {
   final String title = 'Shuffle Example';
@@ -9,76 +20,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) => MaterialApp(
         title: title,
+        debugShowCheckedModeBanner: false,
         theme: ThemeData(primarySwatch: Colors.deepOrange),
-        home: MainPage(title: title),
-      );
-}
-
-class MainPage extends StatefulWidget {
-  final String title;
-
-  const MainPage({
-    @required this.title,
-  });
-
-  @override
-  _MainPageState createState() => _MainPageState();
-}
-
-class _MainPageState extends State<MainPage> {
-  static const List<String> quotes = [
-    'You only live once, but if you do it right, once is enough.',
-    'If you want to live a happy life, tie it to a goal, not to people or things.',
-    'In order to write about life first you must live it.',
-  ];
-
-  String quote = quotes.first;
-  ShakeDetector detector;
-
-  @override
-  void initState() {
-    super.initState();
-
-    detector = ShakeDetector.autoStart(
-      onPhoneShake: () {
-        final newQuote = (List.of(quotes)
-              ..remove(quote)
-              ..shuffle())
-            .first;
-
-        setState(() {
-          this.quote = newQuote;
-        });
-      },
-    );
-  }
-
-  @override
-  void dispose() {
-    detector.stopListening();
-
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) => Scaffold(
-        backgroundColor: Colors.black,
-        appBar: AppBar(
-          title: Text(widget.title),
-        ),
-        body: Container(
-          padding: EdgeInsets.all(48),
-          child: Center(
-            child: Text(
-              quote,
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ),
-        ),
+        home: LoginPage(),
       );
 }
